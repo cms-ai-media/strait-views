@@ -1,0 +1,7 @@
+:root{--bg:#F3F6F7;--ink:#1B2A33;--muted:#5D7180;--accent:#0F6E8C;--line:#D8E2E7;--card:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#0E161B;--ink:#E2EAEE;--muted:#8CA1AE;--accent:#43A8C8;--line:#26343D;--card:#16222A}}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 "Noto Sans TC",-apple-system,"Segoe UI",sans-serif;padding:0 16px}
+main{max-width:760px;margin:40px auto;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:28px}
+h1{font-size:26px;margin:0 0 6px}h2{font-size:19px;margin:26px 0 6px}
+a{color:var(--accent)}.muted{color:var(--muted);font-size:14px}nav{margin-top:28px;border-top:1px solid var(--line);padding-top:14px;font-size:14px}
+nav a{margin-right:14px}
