@@ -5,3 +5,4 @@ main{max-width:760px;margin:40px auto;background:var(--card);border:1px solid va
 h1{font-size:26px;margin:0 0 6px}h2{font-size:19px;margin:26px 0 6px}
 a{color:var(--accent)}.muted{color:var(--muted);font-size:14px}nav{margin-top:28px;border-top:1px solid var(--line);padding-top:14px;font-size:14px}
 nav a{margin-right:14px}
+.hero{display:block;width:calc(100% + 56px);max-width:none;margin:-28px -28px 18px;border-radius:10px 10px 0 0}code{background:var(--bg);padding:1px 5px;border-radius:4px}
