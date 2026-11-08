@@ -1,0 +1,70 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>從蒐集器長成編輯部：素材雷達與資訊哨兵｜開發誌</title>
+<meta name="description" content="自動蒐集國際媒體素材的哨兵系統，怎麼從「廣撒網＋人工過濾」演化成有判斷標準、會自己分流的虛擬編輯部。">
+<link rel="stylesheet" href="../style.css"></head><body><main>
+<p class="muted">開發誌 · 2026-11-08 · 系列（一）選題</p>
+<h1>從蒐集器長成編輯部：素材雷達與資訊哨兵</h1>
+
+<p>這個頻道的第一個系統叫「資訊哨兵」：每天早上自動掃一遍國際媒體在 YouTube 上談台海的內容，
+評分、整理成日報。最早它只是一張網——撒得夠廣，撈回來一大堆，然後靠人每天把日報從頭看到尾，
+挑出能用的素材，自己想辦法湊成一集節目。蒐集是自動的，<strong>判斷全是人工的</strong>。
+這樣撐得過第一個月，撐不過第一年。</p>
+
+<svg class="diagram" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="哨兵分流與話題組示意圖">
+<defs><marker id="ar3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker></defs>
+<g font-size="16" fill="var(--ink)" text-anchor="middle">
+<rect x="10" y="20" width="150" height="52" rx="8" fill="none" stroke="var(--line)"/><text x="85" y="42">每日掃描</text><text x="85" y="62" class="cap">英・日媒／智庫</text>
+<rect x="200" y="20" width="150" height="52" rx="8" fill="none" stroke="var(--line)"/><text x="275" y="42">評分標示</text><text x="275" y="62" class="cap">熱度・規模・來源</text>
+<rect x="390" y="20" width="150" height="52" rx="8" fill="var(--accent)" fill-opacity="0.12" stroke="var(--accent)"/><text x="465" y="42">分流</text><text x="465" y="62" class="cap">哨兵自己判斷</text>
+<rect x="580" y="0" width="110" height="36" rx="6" fill="none" stroke="var(--accent)"/><text x="635" y="24" font-size="14">⚡ 即時</text>
+<rect x="580" y="44" width="110" height="36" rx="6" fill="none" stroke="var(--line)"/><text x="635" y="68" font-size="14">常規彙編</text>
+<rect x="580" y="88" width="110" height="36" rx="6" fill="none" stroke="var(--line)"/><text x="635" y="112" font-size="14">專輯書架</text>
+<rect x="580" y="132" width="110" height="36" rx="6" fill="none" stroke="var(--line)" stroke-dasharray="4 3"/><text x="635" y="156" font-size="14" fill="var(--muted)">建議不採用</text>
+<line x1="160" y1="46" x2="196" y2="46" stroke="var(--muted)" marker-end="url(#ar3)"/>
+<line x1="350" y1="46" x2="386" y2="46" stroke="var(--muted)" marker-end="url(#ar3)"/>
+<line x1="540" y1="36" x2="576" y2="22" stroke="var(--muted)" marker-end="url(#ar3)"/>
+<line x1="540" y1="46" x2="576" y2="60" stroke="var(--muted)" marker-end="url(#ar3)"/>
+<line x1="540" y1="58" x2="576" y2="102" stroke="var(--muted)" marker-end="url(#ar3)"/>
+<line x1="540" y1="66" x2="576" y2="146" stroke="var(--muted)" marker-end="url(#ar3)"/>
+<rect x="200" y="170" width="260" height="56" rx="8" fill="none" stroke="var(--line)"/><text x="330" y="192">話題組浮上雷達</text><text x="330" y="212" class="cap">30 天內 ≥3 筆夠份量才上榜</text>
+<rect x="200" y="248" width="260" height="44" rx="8" fill="var(--accent)" fill-opacity="0.75"/><text x="330" y="276" fill="var(--card)">人按「啟動製作」或「淘汰」</text>
+<path d="M620 170 C600 190 500 192 464 196" fill="none" stroke="var(--muted)" marker-end="url(#ar3)"/>
+<line x1="330" y1="226" x2="330" y2="244" stroke="var(--muted)" marker-end="url(#ar3)"/>
+<text x="95" y="276" class="cap">哨兵只能建議淘汰</text><text x="95" y="294" class="cap">生殺永遠是人按的鈕</text>
+</g></svg>
+
+<h2>先教它「什麼是好素材」</h2>
+<p>第一步是把人腦裡的篩選標準寫成文字。每一筆素材進來，哨兵要標：熱度星等（這支影片在它的量級裡算不算竄升）、
+頻道規模、來源屬性（官方媒體、智庫、獨立評論⋯⋯）。後來又加開日本主流媒體的監測線——
+頻道的視野不該被英文世界框住，日媒看台海的角度常常跟英美完全不同。
+這些標準不是寫死在程式裡，而是放在一份哨兵自己每天會重讀的「指令」文件裡，人隨時可以改、
+可以調權重。<strong>判斷標準成文化，是蒐集器變編輯部的第一塊地基</strong>——因為可以被修改的判斷，才教得會。</p>
+
+<h2>再教它「這則素材該去哪」</h2>
+<p>第二步是分流。現在每筆素材進來，哨兵要自己評一個去向：<strong>即時</strong>（三天內最有價值、
+一週後時效大降的突發外電，建議插播）、<strong>常規</strong>（進每週彙編）、<strong>專輯</strong>
+（單獨撐不起一集，但屬於某個值得累積的主題，上書架慢慢攢）、或<strong>不建議採用</strong>。
+評專輯的素材還得寫清楚「適合什麼時機播」，而且時機要寫在理由的最前面——因為書架就是按這段話分格的。
+有一條規矩很重要：<strong>哨兵只能建議淘汰，不能自己刪</strong>。素材的生殺永遠是人按的鈕。</p>
+
+<h2>話題自己長出來</h2>
+<p>第三步是讓「題目」浮現。單筆素材不成節目，素材雷達會把同一件事的素材聚成話題組：
+三十天內累積滿三筆夠份量的素材，這個話題組才會浮上榜，附上它的素材清單與動能
+（最近是在升溫還是退燒）。時效分是看榜當下現算的——三天內發布的外電浮在最上面，
+一週後自動沉下去，不會因為「收錄那天很新」就永遠占位。人看到的不再是一百筆素材，
+而是「這十個題目夠份量了，要不要開工？」——按「啟動製作」或「淘汰」，一個動作。</p>
+
+<h2>編輯方針是船舵</h2>
+<p>系統再自主，方針仍然是人定的。這個頻道的編輯核心寫成一句話放在指令最上面:
+<strong>持續觀察台灣在國際局勢中的位置</strong>——不只盯衝突，也看供應鏈、外交、
+周邊國家的政治變化怎麼牽動台海。哨兵的所有評分都在這句話底下運作。
+方針變了，改那一句，整個編輯部隔天就轉向。</p>
+
+<p>現在回頭看，「自主性」不是某一天設計出來的功能，而是把人工判斷一條一條寫成可修改的規則、
+再讓系統天天照著跑的累積結果。像帶一個新進編輯：前三個月你改他的每一份清單，
+後來你只看他挑出來的頭條。</p>
+
+<p class="muted">本頻道由 AI 協助製作與記錄，選題、判斷與觀點出自頻道主本人。</p>
+
+<nav><a href="index.html">回開發誌 Devlog</a><a href="../index.html">回首頁 Home</a><a href="https://www.youtube.com/@TaiwanStraitViews">YouTube 頻道</a></nav>
+</main></body></html>

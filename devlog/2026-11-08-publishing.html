@@ -1,0 +1,58 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>上架的一條龍：封面、排程、文案與宣傳短片｜開發誌</title>
+<meta name="description" content="成片之後的最後一哩：封面格式、標題 A/B、說明欄、排程月曆、API 直通 YouTube 與宣傳短片的串接。">
+<link rel="stylesheet" href="../style.css"></head><body><main>
+<p class="muted">開發誌 · 2026-11-08 · 系列（五）上架</p>
+<h1>上架的一條龍：封面、排程、文案與宣傳短片</h1>
+
+<p>影片做完只是半成品。封面、標題、說明欄、排程、宣傳短片——這些「上架準備」早期是最零碎的人工：
+每集跑去別的工具做封面、手動填 YouTube 後台、說明欄每次重寫。現在這一環反而是自動化最完備的一段。</p>
+
+<svg class="diagram" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="上架流程示意圖">
+<defs><marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker></defs>
+<g font-size="16" fill="var(--ink)" text-anchor="middle">
+<rect x="10" y="80" width="120" height="52" rx="8" fill="none" stroke="var(--line)"/><text x="70" y="102">成片放行</text><text x="70" y="122" class="cap">人</text>
+<rect x="170" y="14" width="160" height="52" rx="8" fill="none" stroke="var(--line)"/><text x="250" y="36">封面（固定格式）</text><text x="250" y="56" class="cap">候選給人挑</text>
+<rect x="170" y="80" width="160" height="52" rx="8" fill="none" stroke="var(--line)"/><text x="250" y="102">標題 A/B＋說明欄</text><text x="250" y="122" class="cap">章節・來源・版權</text>
+<rect x="170" y="146" width="160" height="52" rx="8" fill="none" stroke="var(--line)"/><text x="250" y="168">宣傳短片</text><text x="250" y="188" class="cap">直式・連回正片</text>
+<rect x="370" y="80" width="140" height="52" rx="8" fill="var(--accent)" fill-opacity="0.12" stroke="var(--accent)"/><text x="440" y="102">API 直通上傳</text><text x="440" y="122" class="cap">私人・縮圖・排程</text>
+<rect x="550" y="80" width="120" height="52" rx="8" fill="none" stroke="var(--line)"/><text x="610" y="102">排程月曆</text><text x="610" y="122" class="cap">一覽全局</text>
+<line x1="130" y1="106" x2="166" y2="106" stroke="var(--muted)" marker-end="url(#ar2)"/>
+<line x1="330" y1="40" x2="380" y2="76" stroke="var(--muted)" marker-end="url(#ar2)"/>
+<line x1="330" y1="106" x2="366" y2="106" stroke="var(--muted)" marker-end="url(#ar2)"/>
+<line x1="330" y1="172" x2="380" y2="136" stroke="var(--muted)" marker-end="url(#ar2)"/>
+<line x1="510" y1="106" x2="546" y2="106" stroke="var(--muted)" marker-end="url(#ar2)"/>
+<text x="350" y="236" class="cap">人按三次：挑封面、版權檢查後按排程、（有短片時）在後台連回正片</text>
+</g></svg>
+
+<h2>封面：從外包給工具，到自己的格式</h2>
+<p>早期每集的封面都到外面的 AI 工具重新「發明」一次，風格飄忽。現在封面由系統自製，
+而且演化出<strong>固定格式</strong>：版面哪裡放什麼字是定的，變的只有右側那格——放這一集
+「正在行動的人」（軍演、艦艇、談判桌，而不是講話的大頭）。候選圖做好放到控制面板上，
+頻道主在平板上點一張就定案；他也常直接給創意方向，系統照著改。
+原則上<strong>少用純 AI 生成、多用真實照片去背重組</strong>——人物是真實的，
+就不必掛「AI 合成肖像」的標註；真要用合成肖像的集數，上傳時自動帶上合成內容聲明。</p>
+
+<h2>文案：標題跟封面是一組的</h2>
+<p>標題自動產兩組做 A/B 測試，有一條鐵律：<strong>每組標題的開頭照抄同組封面上的大字</strong>，
+後面才接長尾搜尋詞——觀眾在首頁看到的封面和標題必須講同一句話。說明欄全自動：
+章節時間碼、每一則素材的來源與連結、引用畫面的出處、AI 協助製作的聲明，一樣不缺。
+這既是對觀眾的交代，也是版權上的自保。</p>
+
+<h2>排程：一張月曆看全局</h2>
+<p>頻道從一開始就是「月曆思維」：每週固定一集常規節目，控制面板上一張排程表
+把三種狀態盡收眼底——<strong>已播出的、已上架排程還沒公開的、還在製作的</strong>。
+上傳本身走 YouTube API：成片放行後自動上傳為私人影片、掛縮圖、設定排程時間；
+人只做兩個動作——在後台看一眼版權檢查，回面板按「排程」。改期也是面板上改，系統同步到 YouTube。</p>
+
+<h2>宣傳短片也是排程的一部分</h2>
+<p>有企劃宣傳短片的集數，系統會提醒、有專門的直式短片製作單元（原素材直接裁滿版、大字少字），
+而且上架時間排在正片之後、在後台把短片「連回」正片——短片是導流的入口，不是獨立作品。</p>
+
+<p>上架這一環的心得很簡單：它是整條產線裡<strong>最格式化、最沒有創意成分</strong>的一段，
+所以也是最該先自動化的一段。把人從填表格裡解放出來，才有力氣去管真正要人判斷的事。</p>
+
+<p class="muted">本頻道由 AI 協助製作與記錄，選題、判斷與觀點出自頻道主本人。</p>
+
+<nav><a href="index.html">回開發誌 Devlog</a><a href="../index.html">回首頁 Home</a><a href="https://www.youtube.com/@TaiwanStraitViews">YouTube 頻道</a></nav>
+</main></body></html>

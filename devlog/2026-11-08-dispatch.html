@@ -27,6 +27,22 @@
 一路做到「等你審」為止。</p>
 
 <h2>關鍵設計：狀態機，不是待辦清單</h2>
+<svg class="diagram" viewBox="0 0 700 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="一集節目的狀態機示意圖">
+<defs><marker id="ar5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker></defs>
+<g font-size="16" fill="var(--ink)" text-anchor="middle">
+<rect x="10" y="30" width="140" height="52" rx="8" fill="var(--accent)" fill-opacity="0.75"/><text x="80" y="52" fill="var(--card)">題材敲定</text><text x="80" y="72" font-size="13" fill="var(--card)">人</text>
+<rect x="190" y="30" width="150" height="52" rx="8" fill="none" stroke="var(--line)"/><text x="265" y="52">本機製作中</text><text x="265" y="72" class="cap">派工器找顯示卡空檔</text>
+<rect x="380" y="30" width="140" height="52" rx="8" fill="var(--accent)" fill-opacity="0.75"/><text x="450" y="52" fill="var(--card)">等你審 → 放行</text><text x="450" y="72" font-size="13" fill="var(--card)">人</text>
+<rect x="560" y="30" width="130" height="52" rx="8" fill="none" stroke="var(--line)"/><text x="625" y="52">上傳（私人）</text><text x="625" y="72" class="cap">API 自動</text>
+<rect x="190" y="140" width="170" height="52" rx="8" fill="var(--accent)" fill-opacity="0.75"/><text x="275" y="162" fill="var(--card)">版權檢查 → 按排程</text><text x="275" y="182" font-size="13" fill="var(--card)">人</text>
+<rect x="420" y="140" width="150" height="52" rx="8" fill="none" stroke="var(--line)"/><text x="495" y="162">已排程</text><text x="495" y="182" class="cap">時間到自動公開</text>
+<line x1="150" y1="56" x2="186" y2="56" stroke="var(--muted)" marker-end="url(#ar5)"/>
+<line x1="340" y1="56" x2="376" y2="56" stroke="var(--muted)" marker-end="url(#ar5)"/>
+<line x1="520" y1="56" x2="556" y2="56" stroke="var(--muted)" marker-end="url(#ar5)"/>
+<path d="M625 82 C625 130 440 150 364 162" fill="none" stroke="var(--muted)" marker-end="url(#ar5)"/>
+<line x1="360" y1="166" x2="416" y2="166" stroke="var(--muted)" marker-end="url(#ar5)"/>
+<text x="80" y="226" class="cap">實心＝人出現的節點</text><text x="490" y="226" class="cap">其餘每一步：機器看狀態欄自己接手</text>
+</g></svg>
 <p>每一集在資料庫裡是一份文件，上面有一個狀態欄位，沿一條固定的路走：
 <code>題材敲定 → 本機製作中 → 等你審 → 放行 → 上傳（私人） → 版權檢查 OK → 排程</code>。
 人只在四個節點出現：<strong>敲定題材、審整片、按定稿、按排程</strong>。其餘每一步都是機器看狀態欄自己接手。

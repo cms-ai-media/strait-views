@@ -1,0 +1,57 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>機器自己聽診：旁白產線的品管演化｜開發誌</title>
+<meta name="description" content="從破音字字典的手工抓錯，到「合成→自己聽寫→比對→重配」的自動閉環：中文 TTS 旁白的品管怎麼長出來。">
+<link rel="stylesheet" href="../style.css"></head><body><main>
+<p class="muted">開發誌 · 2026-11-08 · 系列（三）聲音</p>
+<h1>機器自己聽診：旁白產線的品管演化</h1>
+
+<p>旁白全程用本地的語音複製模型（F5-TTS）從文字稿唸出來。聽起來像是「文字進、聲音出」的一條直線，
+實際上這條線的大半開發時間都花在一個問題上：<strong>它會唸錯，而且你不一定聽得出來</strong>。</p>
+
+<h2>第一階段：人耳當品管</h2>
+<p>最早就是整篇合成、整篇用耳朵聽。中文的多音字是重災區——「行動」的行、「重新」的重；
+更陰險的是變調：「部隊」會被唸成「不對」，因為「部」的第四聲接第四聲時被模型當成「不」來變調。
+每抓到一個就記進本地的多音字字典。但字典是<strong>手工的、事後的</strong>：
+永遠在修上一集的錯，防不了下一集的新詞。</p>
+
+<h2>第二階段：發現「聽」也會騙人</h2>
+<p>想用語音辨識自動驗收，結果發現整句聽寫會「靠上下文把錯字猜回來」——模型唸壞的字，
+辨識引擎看前後文照樣寫出正確的字，報告一片綠。破解的方法是不看整句、
+看<strong>單字的辨識信心值</strong>：唸壞的字信心掉到 0.2 以下，正常的字在 0.9 以上，一翻兩瞪眼。
+聲調錯誤連信心值都抓不到（人名尤其），就直接<strong>量音高曲線</strong>——
+第幾聲是可以用訊號算出來的，不必靠耳朵。</p>
+
+<h2>第三階段：閉環</h2>
+<svg class="diagram" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="旁白品管閉環流程圖">
+<defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker></defs>
+<g font-size="16" fill="var(--ink)" text-anchor="middle">
+<rect x="10" y="30" width="150" height="52" rx="8" fill="none" stroke="var(--line)"/><text x="85" y="52">文字稿</text><text x="85" y="72" class="cap">停頓記號・改寫</text>
+<rect x="200" y="30" width="150" height="52" rx="8" fill="none" stroke="var(--line)"/><text x="275" y="52">多音字預檢</text><text x="275" y="72" class="cap">字典・改拼法</text>
+<rect x="390" y="30" width="150" height="52" rx="8" fill="none" stroke="var(--line)"/><text x="465" y="52">逐句合成</text><text x="465" y="72" class="cap">一句三個候選</text>
+<rect x="390" y="150" width="150" height="52" rx="8" fill="var(--accent)" fill-opacity="0.12" stroke="var(--accent)"/><text x="465" y="172">機器聽診</text><text x="465" y="192" class="cap">聽寫比對・逐字信心</text>
+<rect x="200" y="150" width="150" height="52" rx="8" fill="none" stroke="var(--line)"/><text x="275" y="172">挑最好／重配</text><text x="275" y="192" class="cap">拿不準 → 量音高</text>
+<rect x="10" y="150" width="150" height="52" rx="8" fill="none" stroke="var(--line)"/><text x="85" y="172">組裝成品</text><text x="85" y="192" class="cap">音量・等化・限幅</text>
+<line x1="160" y1="56" x2="196" y2="56" stroke="var(--muted)" marker-end="url(#ar)"/>
+<line x1="350" y1="56" x2="386" y2="56" stroke="var(--muted)" marker-end="url(#ar)"/>
+<line x1="465" y1="82" x2="465" y2="146" stroke="var(--muted)" marker-end="url(#ar)"/>
+<line x1="390" y1="176" x2="354" y2="176" stroke="var(--muted)" marker-end="url(#ar)"/>
+<line x1="200" y1="176" x2="164" y2="176" stroke="var(--muted)" marker-end="url(#ar)"/>
+<path d="M275 150 C275 110 380 110 440 86" fill="none" stroke="var(--muted)" stroke-dasharray="5 4" marker-end="url(#ar)"/>
+<text x="300" y="120" class="cap" text-anchor="middle">唸錯 → 回去重配</text>
+<text x="85" y="250" class="cap">人只出現在最後：聽機器沒把握的那幾句</text>
+</g></svg>
+
+<p>現在的流程是一個迴圈：合成前先跑多音字預檢；每一句合成三個候選；機器自己把每個候選轉寫回文字，
+跟原稿逐字比對，用信心值挑出最好的一個；比對不過的句子自動重配，聲調拿不準就量音高。
+段落開頭偶爾會漏出半個字，也是量波形凹陷來判斷要不要切。
+全部過了才組裝、對齊音量交出去。</p>
+
+<h2>人剩下做什麼</h2>
+<p>聽機器標出來「沒把握」的句子，和自己抽聽成片。還有一條規矩是教訓換來的：
+頻道主點名說某個字唸錯，不准拿「機器量過是正常的」回嘴——多配幾個版本、
+剪成對照短片給他挑。儀器是輔助判斷的，不是拿來駁回人耳的。</p>
+
+<p class="muted">本頻道由 AI 協助製作與記錄，選題、判斷與觀點出自頻道主本人。</p>
+
+<nav><a href="index.html">回開發誌 Devlog</a><a href="../index.html">回首頁 Home</a><a href="https://www.youtube.com/@TaiwanStraitViews">YouTube 頻道</a></nav>
+</main></body></html>

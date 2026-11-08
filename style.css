@@ -8,3 +8,5 @@ nav a{margin-right:14px}
 .hero{display:block;width:calc(100% + 56px);max-width:none;margin:-28px -28px 18px;border-radius:10px 10px 0 0}code{background:var(--bg);padding:1px 5px;border-radius:4px}
 .postlist{list-style:none;padding:0;margin:8px 0}.postlist li{padding:8px 0;border-bottom:1px solid var(--line)}
 .postlist .muted{margin-right:10px}
+.diagram{display:block;width:100%;height:auto;margin:20px 0;font-family:inherit}
+.diagram .cap{font-size:13px;fill:var(--muted)}
