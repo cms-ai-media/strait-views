@@ -1,0 +1,75 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>工具清單：一集節目背後用了哪些模型與工具｜開發誌</title>
+<meta name="description" content="照製作順序列出整條產線用到的開源模型與工具：yt-dlp、faster-whisper、F5-TTS、ffmpeg、InfiniteTalk、LTX 2.5、Qwen Image Edit，以及哪幾步真的需要顯示卡。">
+<link rel="stylesheet" href="../style.css">
+<style>
+.tools{width:100%;border-collapse:collapse;margin:14px 0 22px;font-size:15px}
+.tools th,.tools td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
+.tools th{color:var(--muted);font-weight:600;white-space:nowrap}
+.tools td:last-child,.tools th:last-child{white-space:nowrap}
+.wrap{overflow-x:auto}
+</style></head><body><main>
+<p class="muted">開發誌 · 2026-11-11 · 附錄　工具清單</p>
+<h1>工具清單：一集節目背後用了哪些模型與工具</h1>
+
+<p>前面六篇講的是產線怎麼長出來，這一篇只做一件事：<strong>照製作順序，把用到的工具全部列出來</strong>，
+並標明哪幾步真的需要顯示卡。整條線跑在一台 12 GB 顯示卡的桌機上，除了寫稿用的語言模型與 YouTube 的介面，
+其餘都在本機執行。</p>
+
+<h2>一、每一集都會用</h2>
+<div class="wrap"><table class="tools">
+<tr><th>步驟</th><th>工具／模型</th><th>做什麼</th><th>顯示卡</th></tr>
+<tr><td>抓來源</td><td>yt-dlp</td><td>下載來源影片、字幕與留言</td><td>不用</td></tr>
+<tr><td>來源轉寫</td><td>faster-whisper（medium）</td><td>沒有字幕的來源轉成文字，取得原音的逐字時間</td><td>輕</td></tr>
+<tr><td>選原音、寫稿</td><td>Claude</td><td>挑原音段落，寫導讀稿、開場與結尾</td><td>不用（雲端）</td></tr>
+<tr><td>讀音預檢</td><td>pypinyin、OpenCC、自建多音字字典</td><td>配音前先找出可能念錯的字</td><td>不用</td></tr>
+<tr><td>配音</td><td>F5-TTS</td><td>用參考音逐句合成，一句配幾個候選</td><td>中</td></tr>
+<tr><td>聽診修正</td><td>faster-whisper</td><td>把配好的聲音聽寫回來逐字比對，看每個字的辨識信心</td><td>輕</td></tr>
+<tr><td>聲調量測</td><td>自寫的音高量測</td><td>聽寫判斷不了的聲調（人名、變調）直接量音高曲線</td><td>不用</td></tr>
+<tr><td>找畫面</td><td>公版與 CC 授權圖庫、Pexels</td><td>只收公有領域、CC0、CC BY 與免版稅素材</td><td>不用</td></tr>
+<tr><td>版面與封面</td><td>Pillow、rembg</td><td>畫版型、字卡、留言側欄、封面卡；去背</td><td>不用</td></tr>
+<tr><td>講者裁切</td><td>OpenCV</td><td>臉部置中、挑睜眼的影格</td><td>不用</td></tr>
+<tr><td>合成</td><td>ffmpeg</td><td>剪接、疊圖、字幕、配樂混音、音量</td><td>幾乎不用</td></tr>
+<tr><td>儀表板版型</td><td>Pillow＋ffmpeg</td><td>把整集排進「戰情室」式的多格畫面</td><td>幾乎不用</td></tr>
+<tr><td>同步檢查</td><td>faster-whisper</td><td>出片前量字幕與聲音有沒有對上</td><td>輕</td></tr>
+<tr><td>上傳與排程</td><td>YouTube Data API</td><td>上傳為私人、寫說明欄、設縮圖、排程</td><td>不用</td></tr>
+<tr><td>控制面板</td><td>網頁面板＋小型資料庫</td><td>審稿、放行、看預覽、看進度（平板可用）</td><td>不用</td></tr>
+</table></div>
+
+<h2>二、數位主持人（新加的一段）</h2>
+<p>節目裡偶爾出現幾秒的主持人是 AI 生成的原創人物，畫面上一律標示「AI 生成主持人」。
+它只換畫面：旁白、配樂、原音整條不動，對嘴用的聲音直接從成片切出來。</p>
+<div class="wrap"><table class="tools">
+<tr><th>步驟</th><th>工具／模型</th><th>做什麼</th><th>顯示卡</th></tr>
+<tr><td>人物定妝圖</td><td>Qwen Image Edit（ComfyUI）</td><td>定出人物長相、姿勢、手勢，補畫成 16:9</td><td>重</td></tr>
+<tr><td>開口講話</td><td>InfiniteTalk（底層 Wan 2.1，ComfyUI）</td><td>定妝圖＋那幾秒旁白 → 對嘴的講話片段</td><td>最重</td></tr>
+<tr><td>不講話的動作</td><td>LTX 2.5（本機版）</td><td>走進來、關燈離場這類身體動作</td><td>重</td></tr>
+<tr><td>背景處理</td><td>Pillow＋ffmpeg</td><td>背景做淺景深、調暗燈光</td><td>不用</td></tr>
+<tr><td>排隊</td><td>自寫的等候佇列</td><td>等顯示卡空了才開算，不跟配音搶</td><td>—</td></tr>
+<tr><td>疊進成片</td><td>ffmpeg</td><td>片頭、每則開頭、結尾角落、離場</td><td>幾乎不用</td></tr>
+</table></div>
+
+<h2>三、顯示卡到底忙在哪裡</h2>
+<p>列完才看得清楚：<strong>真正吃顯示卡的只有三個</strong>——InfiniteTalk、LTX 2.5、Qwen Image Edit，全都在數位主持人那一段。
+其中講話片段最貴，一秒影片大約要算一百秒，所以主持人一集只出現幾處、每次幾秒。
+定妝圖與離場動作做一次就可以每集重複用，真正每集要新算的只有講話片段。</p>
+<p>反過來說，日常的配音、聽診、合成對顯示卡的需求很小。一集裡顯示卡大半時間是空的，
+這也是為什麼同一台機器可以用排程「找空檔自己做」。</p>
+
+<h2>四、背後跑流程的</h2>
+<ul>
+<li>排程：每天早上的資訊哨兵、每小時的派工、每十分鐘接面板按鈕的小哨。</li>
+<li>顯示卡檢查與防睡眠：開工前看顯示卡空不空，做事時不讓電腦睡著。</li>
+</ul>
+
+<h2>五、試過但沒留下來的</h2>
+<ul>
+<li>CosyVoice：做過盲測與修音，頻道主聽完覺得不好聽，旁白回到 F5-TTS。</li>
+<li>IndexTTS2：試過後否決。</li>
+</ul>
+<p>換模型的標準一直是同一條：<strong>以人耳為準</strong>。量測數字再漂亮，頻道主聽了不舒服就不用。</p>
+
+<p class="muted">本頻道由 AI 協助製作與記錄，選題、判斷與觀點出自頻道主本人。</p>
+
+<nav><a href="index.html">回開發誌 Devlog</a><a href="../index.html">回首頁 Home</a><a href="https://www.youtube.com/@TaiwanStraitViews">YouTube 頻道</a></nav>
+</main></body></html>
