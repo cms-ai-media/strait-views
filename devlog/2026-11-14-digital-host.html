@@ -1,0 +1,68 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>數位主持人：一台 12 GB 顯示卡養出來的出鏡者｜開發誌</title>
+<meta name="description" content="頻道的 AI 生成主持人怎麼做：人物定版、暗書房場景、InfiniteTalk 講話與 LTX 2.5 動作兩條路、對嘴量測、首播教訓與重用法則。">
+<link rel="stylesheet" href="../style.css"></head><body><main>
+<p class="muted">開發誌 · 2026-11-14 · 系列（七）數位主持人</p>
+<h1>數位主持人：一台 12 GB 顯示卡養出來的出鏡者</h1>
+
+<p>這個頻道一直沒有人出鏡。旁白是語音複製的聲音，畫面是外媒片段與自製圖卡——直到我們決定給節目
+一位<strong>主持人</strong>：一個 AI 生成的原創人物，在片頭進場、在每一則開頭報題、在結尾說再見。
+畫面上一律標示「AI 生成主持人」；<strong>聲音整條不動</strong>——他對嘴用的就是成片裡既有的旁白，
+數位主持人只換畫面，不換聲音。</p>
+
+<h2>人物：從本人長相逐步偏離</h2>
+<p>人物長相的起點是頻道主本人的照片，然後用「偏離階梯」一步步往外走——同一張底圖、
+逐步調高重畫強度，走到「看得出是個真實的人、但不是任何一個真實存在的人」為止，然後<strong>定版</strong>。
+定版之後就不再動：觀眾每集看到的是同一個人。首播之後還補了一課：第一版皮膚太完美，
+像保養品廣告——改成六十歲該有的真實膚況，加一點白髮，反而更可信。</p>
+
+<h2>場景：暗書房，和一個藏起來的缺陷</h2>
+<p>場景定的是「深夜書房裡坐著的主持人」：個人頻道的規模感，不裝成電視台。這裡有個誠實的工程故事——
+原本想讓背景有世界地圖，但生成模型補畫的地圖會長出亂碼文字、地理位置亂放，一張一張修不完。
+最後的解法不是修，是<strong>藏</strong>：背景做淺景深，糊到看不出地理細節，再把檯燈調暗三成。
+缺陷藏進了景深裡，氣氛反而對了。</p>
+
+<h2>兩個模型，兩條路</h2>
+<svg class="diagram" viewBox="0 0 700 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="數位主持人製作流程圖">
+<defs><marker id="ar7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker></defs>
+<g font-size="16" fill="var(--ink)" text-anchor="middle">
+<rect x="10" y="20" width="160" height="56" rx="8" fill="none" stroke="var(--line)"/><text x="90" y="44">人物定妝圖</text><text x="90" y="64" class="cap">定版後每集重用</text>
+<rect x="240" y="20" width="200" height="56" rx="8" fill="var(--accent)" fill-opacity="0.12" stroke="var(--accent)"/><text x="340" y="44">講話：InfiniteTalk</text><text x="340" y="64" class="cap">1 秒影片 ≈ 100 秒算力</text>
+<rect x="240" y="100" width="200" height="56" rx="8" fill="none" stroke="var(--line)"/><text x="340" y="124">動作：LTX 2.5</text><text x="340" y="144" class="cap">走進來・關燈離場，做一次重用</text>
+<rect x="500" y="20" width="190" height="56" rx="8" fill="none" stroke="var(--line)"/><text x="595" y="44">對嘴量測</text><text x="595" y="64" class="cap">每一段都量，合成前必跑</text>
+<rect x="500" y="100" width="190" height="56" rx="8" fill="none" stroke="var(--line)"/><text x="595" y="124">疊進成片</text><text x="595" y="144" class="cap">片頭・報題・結尾・離場</text>
+<rect x="240" y="190" width="200" height="56" rx="8" fill="none" stroke="var(--line)" stroke-dasharray="5 4"/><text x="340" y="214">等候佇列</text><text x="340" y="234" class="cap">顯示卡空了才開算</text>
+<line x1="170" y1="40" x2="236" y2="40" stroke="var(--muted)" marker-end="url(#ar7)"/>
+<line x1="170" y1="60" x2="236" y2="120" stroke="var(--muted)" marker-end="url(#ar7)"/>
+<line x1="440" y1="48" x2="496" y2="48" stroke="var(--muted)" marker-end="url(#ar7)"/>
+<line x1="595" y1="76" x2="595" y2="96" stroke="var(--muted)" marker-end="url(#ar7)"/>
+<line x1="440" y1="128" x2="496" y2="128" stroke="var(--muted)" marker-end="url(#ar7)"/>
+<line x1="340" y1="190" x2="340" y2="160" stroke="var(--muted)" stroke-dasharray="5 4" marker-end="url(#ar7)"/>
+<text x="90" y="230" class="cap">聲音不動：對嘴用的</text><text x="90" y="250" class="cap">就是成片既有旁白</text>
+</g></svg>
+
+<p>講話和不講話走兩條完全不同的路。<strong>開口講話</strong>用 InfiniteTalk：給它定妝圖和那幾秒的旁白聲音，
+它生成對嘴的講話片段——這是整條產線最貴的一步，一秒影片大約要算一百秒。<strong>不講話的動作</strong>
+（走進書房、喝水、關燈離場）用 LTX 2.5 的影像到影像生成：用首尾幀把動作片段接到講話片段的起始圖上，
+做一次就能每集重複用。兩條路都跑在本機的 ComfyUI 上，跟配音、合成共用同一張 12 GB 顯示卡，
+所以有一個等候佇列：白天別的工作佔卡時，主持人的算圖排隊等空檔。</p>
+
+<h2>首播的六點教訓</h2>
+<p>主持人第一次進節目之後，頻道主看完點了六處：皮膚太完美、頭偏大、脖子滑順得不會轉、
+對嘴差一點點、開場伸手又縮回去⋯⋯每一點都對應一個具體修法——膚況與白髮改底圖、
+比例重裁、對嘴改成<strong>每一段都量</strong>（量出偏移才過關，不再憑感覺）、半身以下直接定住不讓模型亂動。
+教訓本身不稀奇，稀奇的是處理方式：<strong>改進留到下一集，不回頭重出當集</strong>——
+這是下面重用法則的一部分。</p>
+
+<h2>重用法則：出鏡的經濟學</h2>
+<p>顯示卡弱，就得把「新算的東西」壓到最少。規則定成三條：<strong>人物定版</strong>，不每集重新生成；
+<strong>不講話的片段做一次、集集重用</strong>（進場、離場、過場動作是資產，不是耗材）；
+<strong>露臉的次數固定</strong>——頭尾講話，加每一則三次（宣布、中間、結尾前），每次幾秒就好。
+真正每集要新算的只剩講話片段，而講話的內容每集本來就不同。出鏡率是設計出來的，不是算力撐出來的。</p>
+
+<p>工具的完整清單（含顯示卡負擔）見<a href="2026-11-11-toolchain.html">附錄：工具清單</a>。</p>
+
+<p class="muted">本頻道由 AI 協助製作與記錄，選題、判斷與觀點出自頻道主本人。畫面中的主持人為 AI 生成之原創人物。</p>
+
+<nav><a href="index.html">回開發誌 Devlog</a><a href="../index.html">回首頁 Home</a><a href="https://www.youtube.com/@TaiwanStraitViews">YouTube 頻道</a></nav>
+</main></body></html>
