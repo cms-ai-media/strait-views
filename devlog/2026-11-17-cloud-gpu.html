@@ -1,0 +1,99 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>租雲端顯示卡：按小時租整台，還是按支付費？｜開發誌</title>
+<meta name="description" content="數位主持人搬上 Runpod 雲端顯示卡的實際帳目：Community RTX 5090 每小時 0.69 美元、一集主持人約 0.6～1.8 美元；對照按次付費的 Public Endpoint 用 Wan 2.2 做自然景觀，一個下午 9.06 美元。">
+<link rel="stylesheet" href="../style.css">
+<style>
+.tools{width:100%;border-collapse:collapse;margin:14px 0 22px;font-size:15px}
+.tools th,.tools td{text-align:left;vertical-align:top;padding:8px 10px;border-bottom:1px solid var(--line)}
+.tools th{color:var(--muted);font-weight:600;white-space:nowrap}
+.tools td.n,.tools th.n{text-align:right;white-space:nowrap}
+.wrap{overflow-x:auto}
+</style></head><body><main>
+<p class="muted">開發誌 · 2026-11-17 · 系列（九）雲端顯示卡</p>
+<h1>租雲端顯示卡：按小時租整台，還是按支付費？</h1>
+
+<p>數位主持人一直是整條產線最吃顯示卡的一段：在本機那張 12 GB 的卡上，一秒的講話影片大約要算一百秒，
+而且還要跟配音搶同一張卡。2026-11-15 我們第一次把主持人搬上雲端，隔天分工就定了下來——
+<strong>所有主持人影片送雲端做，本機只做定妝照和旁白</strong>。</p>
+<p>雲端用的是 Runpod。它有兩種付費方式，這兩天剛好都用到了，帳單擺在一起看，差別很清楚。</p>
+
+<h2>我們用的模式：按小時租整台機器</h2>
+<p>第一種叫 <strong>Pod</strong>：按小時租一整台有顯示卡的機器，自己裝軟體、自己跑，跑完就刪機，
+開著才計費。我們選的是 <strong>Community Cloud 的 RTX 5090</strong>（32 GB 顯示記憶體），
+<strong>每小時 0.69 美元</strong>。同一張卡在 Secure Cloud 要 1.39 美元，我們不用；
+5090 沒貨時，依序才考慮 4090 和 H100。</p>
+<p>速度：第一次用 H100 試跑，同一段講話比本機快約四倍，畫面跟本機算的幾乎一樣。
+換到 5090 之後，一秒講話影片大約算 31 秒；不講話的動作片段每段一到兩分鐘，本機要四分鐘左右。</p>
+<p>這個模式也有它的麻煩：</p>
+<ul>
+<li><strong>每次開機都要重裝。</strong>Community 的機器不能掛固定硬碟，每台新機都要重裝 ComfyUI、
+重新下載約 40 GB 的模型，開機到能跑大約 25～30 分鐘。</li>
+<li><strong>5090 常常缺貨。</strong>有貨也常幾秒就被搶走。我們寫了一支小程式在背景等，有貨當下自己開機。</li>
+<li><strong>不會自己停。</strong>每台機器都裝了「閒置看門」：顯示卡閒著超過 30 分鐘就自己刪機，免得忘了關一直計費。</li>
+<li><strong>每台都記帳。</strong>刪機後照帳單記一筆，再依各集實際用掉的時間分攤，控制面板上看得到每一集分到多少。</li>
+</ul>
+
+<h2>實際帳目：三台機器、約八小時</h2>
+<div class="wrap"><table class="tools">
+<tr><th>機器</th><th class="n">開機時間</th><th class="n">費用</th><th>做了什麼</th></tr>
+<tr><td>H100（試跑）</td><td class="n">18 分</td><td class="n">$0.79</td><td>第一次上雲端，跟本機畫面對照</td></tr>
+<tr><td>RTX 5090 Community</td><td class="n">3 小時 33 分</td><td class="n">$2.50</td><td>兩集的主持人講話 35 段，加一套不講話動作庫 20 段</td></tr>
+<tr><td>RTX 5090 Community</td><td class="n">4 小時 30 分</td><td class="n">$3.16</td><td>一集的講話 14 段（換新人物造型重跑一次），加秋季造型的動作與測試 37 段</td></tr>
+<tr><td><strong>合計</strong></td><td class="n">約 8 小時 20 分</td><td class="n"><strong>約 $6.5</strong></td><td>含開機安裝、等待與閒置的時間</td></tr>
+</table></div>
+
+<p>分攤到各集（開機和閒置照各集用掉的時間比例攤進去）：</p>
+<div class="wrap"><table class="tools">
+<tr><th>集</th><th class="n">講話片段</th><th class="n">分到的費用</th></tr>
+<tr><td>特別專輯 A</td><td class="n">23 段</td><td class="n">$1.48</td></tr>
+<tr><td>常規節目一集</td><td class="n">12 段</td><td class="n">$0.63</td></tr>
+<tr><td>特別專輯 B（中途換成秋季造型，跑了兩次）</td><td class="n">14 段</td><td class="n">$1.80</td></tr>
+</table></div>
+<p><strong>一集的主持人大約 0.6～1.8 美元</strong>，平均一美元多一點。不講話的動作庫（進場、離場、看窗外、翻筆記⋯）
+是做一次、往後幾個月重複用的資產，不算進單集：第一套約 0.4 美元，秋季那一套約 1.4 美元。</p>
+
+<h2>另一種模式：Public Endpoint，按支付費</h2>
+<p>第二種叫 <strong>Public Endpoint</strong>：Runpod 把熱門模型架好，直接呼叫，按每一次生成收費。
+不用開機、不用裝軟體、不用等貨——方便很多。</p>
+<p>11/15 下午，同一個帳號替另一個節目做了一段自然景觀：拿實地拍的照片（森林步道、溪流與木橋、青苔、蕨類），
+讓模型生成會動的鏡頭。帳單如下：</p>
+<div class="wrap"><table class="tools">
+<tr><th>模型</th><th>單價</th><th class="n">做了幾支</th><th class="n">費用</th></tr>
+<tr><td>Wan 2.2 圖生影片 720p</td><td>每支 5 秒 $0.30</td><td class="n">23 支</td><td class="n">$6.90</td></tr>
+<tr><td>Seedance 2.5 圖生影片 720p</td><td>每秒 $0.36</td><td class="n">1 支（6 秒）</td><td class="n">$2.16</td></tr>
+<tr><td><strong>合計</strong></td><td></td><td class="n">24 支，約 2 分鐘</td><td class="n"><strong>$9.06</strong></td></tr>
+</table></div>
+<p>24 支裡其實只有 13 個不同的場景：第一批動得太少，其中 10 個用「加強動態」的寫法重做了一次，
+重做一次就再付一次錢。Seedance 那一支自帶森林環境音，畫面也好，但一支 6 秒就等於七支 Wan。</p>
+
+<h2>頻道主的結論：主持人負擔得起，自然景觀反而貴</h2>
+<p>把兩張帳單擺在一起：<strong>一個下午、約兩分鐘的風景片，花了 9.06 美元；
+三台機器開了八個多小時、做完三集的主持人加兩套動作庫，總共約 6.5 美元。</strong></p>
+<p>頻道主看完帳單自己下的結論是：用 Runpod 租機器做數位主持人，是可以承擔的成本；
+反而是用 Seedance 或 Wan 做自然景觀，花了好多錢。</p>
+<p>原因在計費方式。租機器是按小時算，機器一開好，多做一段只多花一兩分鐘的錢，重做也一樣；
+按次付費是每一支、每一次重做都收錢，而 AI 影片偏偏常常要重做好幾次才對。</p>
+<p>所以現在的規矩是：</p>
+<ul>
+<li><strong>主持人</strong>（講話與不講話的鏡頭）照舊租機器跑。</li>
+<li><strong>自然景觀先用真實素材</strong>：免版稅圖庫、公有領域影片、頻道主自己拍的照片。
+真的找不到、而且這個鏡頭很重要，才用 AI 生成。</li>
+<li>要用按次付費的模型之前，先估「每支多少錢 × 要做幾支（含重做）」，頻道主點頭再開始。</li>
+</ul>
+<p>Public Endpoint 也不是不好：只要幾支、需要自己架不起來的模型、或是等不到機器的時候，它是最省事的選擇。
+兩種方式各有用處，差別在於做一大批的時候，帳單會長得很不一樣。</p>
+
+<h2>雲端打開的新可能：季節造型</h2>
+<p>算力不再卡在本機那張卡上之後，主持人可以做得更細。我們開始替主持人做<strong>季節造型</strong>：
+同一間有大窗的書房，窗外的景色、身上的衣服跟著季節換，頭髮也隨著一年慢慢變少；
+每一季做一套定妝照，再從它衍生出講話片段和整套不講話的動作。秋季這一套已經用進即將播出的節目。
+人物細節是怎麼一步步做出來的，會另外寫一篇。</p>
+
+<p>工具的完整清單見<a href="2026-11-11-toolchain.html">附錄：工具清單</a>；
+主持人本身怎麼做，見<a href="2026-11-14-digital-host.html">（七）數位主持人</a>。</p>
+
+<p class="muted">本頻道由 AI 協助製作與記錄，選題、判斷與觀點出自頻道主本人。畫面中的主持人為 AI 生成之原創人物。
+文中價格為 2026 年 11 月 Runpod 的牌價與實際帳單，之後可能調整。</p>
+
+<nav><a href="index.html">回開發誌 Devlog</a><a href="../index.html">回首頁 Home</a><a href="https://www.youtube.com/@TaiwanStraitViews">YouTube 頻道</a></nav>
+</main></body></html>

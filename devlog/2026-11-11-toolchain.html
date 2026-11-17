@@ -1,6 +1,6 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>工具清單：一集節目背後用了哪些模型與工具｜開發誌</title>
-<meta name="description" content="照製作順序列出整條產線用到的開源模型與工具：yt-dlp、faster-whisper、F5-TTS、ffmpeg、InfiniteTalk、LTX 2.5、Qwen Image Edit，以及哪幾步真的需要顯示卡。">
+<meta name="description" content="照製作順序列出整條產線用到的開源模型與工具：yt-dlp、faster-whisper、F5-TTS、ffmpeg、InfiniteTalk、LTX 2.5、Qwen Image Edit，哪幾步真的需要顯示卡，以及哪幾步改租 Runpod 雲端顯示卡。">
 <link rel="stylesheet" href="../style.css">
 <style>
 .tools{width:100%;border-collapse:collapse;margin:14px 0 22px;font-size:15px}
@@ -9,12 +9,13 @@
 .tools td:last-child,.tools th:last-child{white-space:nowrap}
 .wrap{overflow-x:auto}
 </style></head><body><main>
-<p class="muted">開發誌 · 2026-11-11 · 附錄　工具清單</p>
+<p class="muted">開發誌 · 2026-11-11 · 附錄　工具清單（2026-11-17 更新：主持人影片改租雲端顯示卡）</p>
 <h1>工具清單：一集節目背後用了哪些模型與工具</h1>
 
-<p>前面六篇講的是產線怎麼長出來，這一篇只做一件事：<strong>照製作順序，把用到的工具全部列出來</strong>，
-並標明哪幾步真的需要顯示卡。整條線跑在一台 12 GB 顯示卡的桌機上，除了寫稿用的語言模型與 YouTube 的介面，
-其餘都在本機執行。</p>
+<p>系列文章講的是產線怎麼長出來，這一篇只做一件事：<strong>照製作順序，把用到的工具全部列出來</strong>，
+並標明哪幾步真的需要顯示卡。整條線原本全部跑在一台 12 GB 顯示卡的桌機上；
+<strong>2026-11-16 起，數位主持人的影片改送雲端租用的顯示卡（Runpod）</strong>，本機只做定妝照和旁白。
+除了寫稿用的語言模型、YouTube 的介面和主持人影片，其餘都在本機執行。</p>
 
 <h2>一、每一集都會用</h2>
 <div class="wrap"><table class="tools">
@@ -41,31 +42,49 @@
 它只換畫面：旁白、配樂、原音整條不動，對嘴用的聲音直接從成片切出來。</p>
 <div class="wrap"><table class="tools">
 <tr><th>步驟</th><th>工具／模型</th><th>做什麼</th><th>顯示卡</th></tr>
-<tr><td>人物定妝圖</td><td>Qwen Image Edit（ComfyUI）</td><td>定出人物長相、姿勢、手勢，補畫成 16:9</td><td>重</td></tr>
-<tr><td>開口講話</td><td>InfiniteTalk（底層 Wan 2.1，ComfyUI）</td><td>定妝圖＋那幾秒旁白 → 對嘴的講話片段</td><td>最重</td></tr>
-<tr><td>不講話的動作</td><td>LTX 2.5（本機版）</td><td>走進來、關燈離場這類身體動作</td><td>重</td></tr>
+<tr><td>人物定妝圖</td><td>Qwen Image Edit（ComfyUI）</td><td>定出人物長相、衣服、季節場景，補畫成 16:9</td><td>重（本機）</td></tr>
+<tr><td>窗光與膚質</td><td>自寫的打光工具（OpenCV）</td><td>側窗光的亮面與暗面、皮膚紋理；不叫模型整張重畫</td><td>不用</td></tr>
+<tr><td>開口講話</td><td>InfiniteTalk（底層 Wan 2.1，ComfyUI）</td><td>定妝圖＋那幾秒旁白 → 對嘴的講話片段</td><td>最重（雲端）</td></tr>
+<tr><td>不講話的動作</td><td>LTX 2.5</td><td>進場、離場、看窗外、翻筆記這類動作，一季做一套動作庫重複用</td><td>重（雲端）</td></tr>
 <tr><td>背景處理</td><td>Pillow＋ffmpeg</td><td>背景做淺景深、調暗燈光</td><td>不用</td></tr>
-<tr><td>排隊</td><td>自寫的等候佇列</td><td>等顯示卡空了才開算，不跟配音搶</td><td>—</td></tr>
+<tr><td>租雲端機器</td><td>Runpod（Community RTX 5090，按小時）</td><td>開機、裝 ComfyUI 和模型、整批跑完、刪機</td><td>雲端</td></tr>
+<tr><td>排隊與看門</td><td>自寫的小程式</td><td>本機：等顯示卡空了才開算；雲端：等 5090 有貨才開機，閒置 30 分鐘自己刪機</td><td>—</td></tr>
+<tr><td>機器檢查</td><td>InsightFace＋OpenCV</td><td>量臉像不像、頭有沒有變大、頭尾接不接得上、對嘴差幾毫秒</td><td>不用</td></tr>
 <tr><td>疊進成片</td><td>ffmpeg</td><td>片頭、每則開頭、結尾角落、離場</td><td>幾乎不用</td></tr>
 </table></div>
 
 <h2>三、顯示卡到底忙在哪裡</h2>
 <p>列完才看得清楚：<strong>真正吃顯示卡的只有三個</strong>——InfiniteTalk、LTX 2.5、Qwen Image Edit，全都在數位主持人那一段。
-其中講話片段最貴，一秒影片大約要算一百秒，所以主持人一集只出現幾處、每次幾秒。
-定妝圖與離場動作做一次就可以每集重複用，真正每集要新算的只有講話片段。</p>
+其中講話片段最貴：在本機一秒影片大約要算一百秒，所以主持人一集只出現幾處、每次幾秒。
+定妝圖與動作片段做一次就可以每集重複用，真正每集要新算的只有講話片段。</p>
 <p>反過來說，日常的配音、聽診、合成對顯示卡的需求很小。一集裡顯示卡大半時間是空的，
 這也是為什麼同一台機器可以用排程「找空檔自己做」。</p>
+<p><strong>2026-11-16 起，三個裡最重的兩個（InfiniteTalk、LTX 2.5）搬上了雲端</strong>，本機的卡只剩定妝圖和配音。
+在雲端的 RTX 5090 上，一秒講話影片大約算 31 秒，動作片段每段一到兩分鐘。</p>
 
-<h2>四、背後跑流程的</h2>
+<h2>四、雲端顯示卡：兩種付費方式</h2>
+<p>同樣在 Runpod，有兩種用法，我們兩種都用過：</p>
+<div class="wrap"><table class="tools">
+<tr><th>方式</th><th>怎麼算錢</th><th>我們拿來做什麼</th><th>實際花費</th></tr>
+<tr><td>Pod（租整台機器）</td><td>Community RTX 5090 每小時 $0.69</td><td>數位主持人：講話片段和動作庫</td><td>一集主持人約 $0.6～1.8</td></tr>
+<tr><td>Public Endpoint（呼叫架好的模型）</td><td>按每次生成收費：Wan 2.2 每支 5 秒 $0.30；Seedance 2.5 每秒 $0.36</td><td>試做自然景觀：24 支、約 2 分鐘</td><td>一個下午 $9.06</td></tr>
+</table></div>
+<p>頻道主的結論：主持人租機器是負擔得起的成本，用按次付費的模型做自然景觀反而貴；
+風景改回真實素材優先，真的需要 AI 生成才先估價再做。完整帳目見
+<a href="2026-11-17-cloud-gpu.html">（九）租雲端顯示卡</a>。</p>
+
+<h2>五、背後跑流程的</h2>
 <ul>
 <li>排程：每天早上的資訊哨兵、每小時的派工、每十分鐘接面板按鈕的小哨。</li>
 <li>顯示卡檢查與防睡眠：開工前看顯示卡空不空，做事時不讓電腦睡著。</li>
 </ul>
 
-<h2>五、試過但沒留下來的</h2>
+<h2>六、試過但沒留下來的</h2>
 <ul>
 <li>CosyVoice：做過盲測與修音，頻道主聽完覺得不好聽，旁白回到 F5-TTS。</li>
 <li>IndexTTS2：試過後否決。</li>
+<li>按次付費的影片模型（Wan 2.2、Seedance 2.5）做自然景觀：畫面可以用，但一個下午就花掉 9.06 美元，
+比主持人租機器還貴。不是禁用，但不再是預設做法。</li>
 </ul>
 <p>換模型的標準一直是同一條：<strong>以人耳為準</strong>。量測數字再漂亮，頻道主聽了不舒服就不用。</p>
 
